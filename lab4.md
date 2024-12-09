@@ -356,7 +356,7 @@ student@327fb651b54a:~/workspace/ns-allinone-3.38/ns-3.38$ ./ns3 run dumbbell-ba
 
 因为我们在 `dumbbell-base.cc` 中只进行了模拟实验，没有加入任何用于获取实验数据的代码，所以你确实找不到任何实验结果的输出，这是正常的。我们会在后面教会你如何获取实验数据。
 
-现在，请你把 `dumbbell-base.cc` 复制一份到统一目录下，并将其命名为 `dumbbell.cc` 。之后的练习中你需要修改 `dumbbell.cc` 。
+现在，请你把 `dumbbell-base.cc` 复制一份到同一目录下，并将其命名为 `dumbbell.cc` 。之后的练习中你需要修改 `dumbbell.cc` 。
 
 > 来自助教的问候：看完 Exercise 1，你可能会觉得已经读太多东西读累了。但好消息是，这已经占了整个文档阅读量的相当一部分了！
 
@@ -860,7 +860,6 @@ test/run_test.sh <ns3_path> <test_name>
 其中：
 
 * `ns3_path` 表示 `ns-3.38` 目录在你的机器上的**绝对路径（不是相对路径）**
-
 * `test_name` 表示你要进行的测试类型，支持的值有 fct、pcap、cwnd、all
 
 举例而言，`./run_test.sh /home/student/workspace/ns-allinone-3.38 cwnd` 可用于单独测试 Exercise 4 (cwnd)，`./run_test.sh /home/student/workspace/ns-allinone-3.38 all` 可用于测试所有需要测试的三个 Exercise (pcap, cwnd, fct) 。更具体的说明你可以参考 starter code 中的  `README.md` 。
@@ -879,6 +878,5 @@ test/run_test.sh <ns3_path> <test_name>
   在判断两个 cwnd trace 文件是否相同时，我们只会比对其中记录的 cwnd 最大值以及第一次达到 cwnd 最大值时的时间戳，并且允许 10% 的误差。
 * Exercise 5 (fct)：
   在判断两个 fct 输出是否相同时，我们会比对你的输出与标准答案输出的 fct 数值，并且允许 5% 的误差。
-
 
 希望大家做 lab4 做得开心！
