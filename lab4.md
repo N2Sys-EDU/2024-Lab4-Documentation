@@ -757,11 +757,11 @@ student@327fb651b54a:~/workspace/ns-allinone-3.38/ns-3.38$ cat lv1-results/fct/f
 
 **注意：Lab4和其他Lab1-2的评测/提交方式不同，请仔细阅读以下内容。**
 
-**测试代码** 我们不提供 Github Classroom 评测功能，但是我们已经将本地评测的脚本和部分测试点放在了 github 中，具体用法将在下一节中介绍。我们只提供部分测试点。
+**测试代码** 我们不提供 Github Classroom 评测功能，但是我们已经将本地评测的脚本和部分测试点放在了 starter code 中，具体用法将在下一节中介绍。我们只提供部分测试点。
 
 **提交代码** 同学们可以通过 Github Classroom 提交代码。Github Classroom 不提供测试点的自动评测，因此你会在 Github Classroom 中观察到 0 分，这是正常的。
 
-**最终评测** 最终的测试环境会在我们提供的课程容器环境中进行。最终测试时会使用全部测试点，使用的评测脚本和我们放在 github 中的本地评测脚本一致。
+**最终评测** 最终的测试环境会在我们提供的课程容器环境中进行。最终测试时会使用全部测试点，使用的评测脚本和我们放在 starter code 中的本地评测脚本一致。
 
 #### 如何提交
 
@@ -770,18 +770,21 @@ student@327fb651b54a:~/workspace/ns-allinone-3.38/ns-3.38$ cat lv1-results/fct/f
 提醒：请务必把你提交的程序文件命名为 `dumbbell.cc` 。不然评测脚本会找不到你的答案。
 
 ```
-```bash
-student@327fb651b54a:~/workspace/code/lab4-starter$ tree -L 2
+student@327fb651b54a:~/workspace/code/lab4-starter$ tree -L 3
 .
 |-- README.md
 |-- dumbbell-base.cc
 |-- dumbbell.cc
 |-- ns-3-tutorial.pdf
 `-- test
-    |-- cwnd-test
-    |-- fct-test
-    |-- pcap-test
-    `-- run_test.sh
+    |-- README.md
+    `-- test-utils
+        |-- cwnd-test
+        |-- fct-test
+        |-- pcap-test
+        `-- run_test.sh
+
+5 directories, 6 files
 ```
 
 我们在进行最终评测时，会将你提交的 `dumbbell.cc` 拷贝到评测容器中 `ns-3.38` 的 `scratch` 目录下，在 `ns-3.38` 目录下并编译运行，比对生成的结果和标准答案。我们在任务文档中提到的文件路径寻找你的程序的输出结果，所以请你务必检查，确保你的程序在每次在运行之后都能在 `ns-3.38` 的 `lv1-results` 目录下的对应路径生产正确的结果，正确的输出文件路径应该如下图所示。
@@ -808,53 +811,14 @@ lv1-results/
 
 #### 使用本地评测脚本
 
-在 starter code 仓库中的 `test/` 目录下存放了大家本地测试所需要使用的脚本和测试样例。
+在 starter code 中，你可以使用 `git submodule update --init --recursive` 来拉取子模块 test。
+
+在 starter code 仓库中的 `test/test-utils` 目录下存放了大家本地测试所需要使用的脚本和测试样例。具体的用法描述可以参见 `README.md` 和 `test/test-utils/README.md` 。
+
+你可以运行 `test/test-utils/run_test.sh` 来进行本地的测试。运行的方法形如
 
 ```bash
-student@327fb651b54a:~/workspace/code/lab4-starter$ tree -L 2 test/
-test/
-|-- cwnd-test
-|   |-- run_cwnd_test
-|   |-- std_case1_n2.dat
-|   |-- std_case1_n3.dat
-|   |-- std_case2_n2.dat
-|   |-- std_case2_n3.dat
-|   |-- std_case3_n2.dat
-|   |-- std_case3_n3.dat
-|   |-- std_case4_n2.dat
-|   |-- std_case4_n3.dat
-|   |-- std_case5_n2.dat
-|   |-- std_case5_n3.dat
-|   `-- test_cases.json
-|-- fct-test
-|   |-- run_fct_test
-|   |-- std_case1.dat
-|   |-- std_case2.dat
-|   |-- std_case3.dat
-|   |-- std_case4.dat
-|   |-- std_case5.dat
-|   `-- test_cases.json
-|-- pcap-test
-|   |-- run_pcap_test
-|   |-- std_case1-0-0.pcap
-|   |-- std_case1-0-1.pcap
-|   |-- std_case1-0-2.pcap
-|   |-- std_case2-0-0.pcap
-|   |-- std_case2-0-1.pcap
-|   |-- std_case2-0-2.pcap
-|   |-- std_case3-0-0.pcap
-|   |-- std_case3-0-1.pcap
-|   |-- std_case3-0-2.pcap
-|   `-- test_cases.json
-`-- run_test.sh
-
-3 directories, 31 files
-```
-
-你可以运行 `test/run_test.sh` 来进行本地的测试。运行的方法形如
-
-```bash
-test/run_test.sh <ns3_path> <test_name>
+test/test-utils/run_test.sh <ns3_path> <test_name>
 ```
 
 其中：
@@ -862,7 +826,7 @@ test/run_test.sh <ns3_path> <test_name>
 * `ns3_path` 表示 `ns-3.38` 目录在你的机器上的**绝对路径（不是相对路径）**
 * `test_name` 表示你要进行的测试类型，支持的值有 fct、pcap、cwnd、all
 
-举例而言，`./run_test.sh /home/student/workspace/ns-allinone-3.38 cwnd` 可用于单独测试 Exercise 4 (cwnd)，`./run_test.sh /home/student/workspace/ns-allinone-3.38 all` 可用于测试所有需要测试的三个 Exercise (pcap, cwnd, fct) 。更具体的说明你可以参考 starter code 中的  `README.md` 。
+举例而言，`test/test-utils/run_test.sh /home/student/workspace/ns-allinone-3.38 cwnd` 可用于单独测试 Exercise 4 (cwnd)，`test/test-utils/run_test.sh /home/student/workspace/ns-allinone-3.38 all` 可用于测试所有需要测试的三个 Exercise (pcap, cwnd, fct) 。具体的用法描述可以参见 `README.md` 和 `test/test-utils/README.md` 。
 
 #### 评测脚本的逻辑
 
@@ -870,7 +834,7 @@ test/run_test.sh <ns3_path> <test_name>
 
 > 其实，同学们如果顺利按照第二章中描述的完成了任务的话，评测下来应该就都是正确的，大概率不需要看这段介绍。之所以在此特地介绍评测脚本的逻辑，是因为本 lab 的评测脚本逻辑实在比较特殊（关于模拟器的 lab 实在是太难设计自动评测方案了）。所以我们在文档中放了这部分供同学们参考。如果大家在评测时发现评测脚本输出的结果不合理，请大胆在 piazza 上提出或者联系助教。
 
-我们通过比对 你程序输出的模拟结果 和 我们的标准例程输出的结果 来进行评测，`test` 目录下以 "std" 开头的那些文件就是用标准例程输出的结果。考虑到不同机器上运行模拟的结果有可能会存在一些误差，所以我们在进行评测时采取了一些宽松的允许误差的比对方式：
+我们通过比对【你程序输出的模拟结果】和【我们的标准例程输出的结果】来进行评测，`test/test-utils` 目录下以 "std" 开头的那些文件就是用标准例程输出的结果。考虑到不同机器上运行模拟的结果有可能会存在一些误差，所以我们在进行评测时采取了一些宽松的允许误差的比对方式：
 
 * Exercise 3 (PCAP)：
   我们只会比对 `lv1-0-1.pcap` 和 `lv1-0-2.pcap` 这两个文件与标准答案，比对时，我们会提取出每行的 ack 字段的值进行比对，如果都一致，那么我们就认为你的输出结果是正确的。
@@ -878,5 +842,10 @@ test/run_test.sh <ns3_path> <test_name>
   在判断两个 cwnd trace 文件是否相同时，我们只会比对其中记录的 cwnd 最大值以及第一次达到 cwnd 最大值时的时间戳，并且允许 10% 的误差。
 * Exercise 5 (fct)：
   在判断两个 fct 输出是否相同时，我们会比对你的输出与标准答案输出的 fct 数值，并且允许 5% 的误差。
+
+#### 其它补充
+
+我们保证所有的测试样例中的模拟都可以在设定的结束时间（60.0s）之前结束，所以你无需更改代码中的 `stopTime` 。
+
 
 希望大家做 lab4 做得开心！
