@@ -726,6 +726,7 @@ Ptr<BulkSendApplication> bulk_app = app.Get(0)->GetObject<BulkSendApplication>()
 3. 别忘了，就像 Exercise 4 中一样，创建 Tracing 连接需要在应用开始之后进行，否则 ns-3 可能会访问到一个不存在的 socket
 4. ns-3 中的 `Time` 类型可以直接进行加减运算，并且对于 `Time` 类型的对象你可以使用  `GetMicroSeconds()` 方法来获得这一时间以微秒为单位的表示，返回值的类型为 `int64_t`。例如， `Simulator::Now().GetMicroSeconds()` 就会返回以微秒为单位的当前模拟器时间
 5. 新增提示：获取流的发送方的 socket 接收到最后一个报文的时间戳其实非常非常简单。其实助教设想的使用 `Rx` 这一 TraceSource 的做法中，根本没用到最后一个报文的内容具体是什么
+6. 新增说明：再计算 FCT 时，你应该直接把 `startTime` （也就是 10.0s） 作为流的开始时间
 
 如果一切顺利，你运行修改后的 `dumbbell.cc` 应该可以获得如下的输出：
 
