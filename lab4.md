@@ -263,7 +263,7 @@ ns-3 中实现了一系列不同类型的发包应用。如果需要，你也可
 
 ```C++
 Time startTime = Seconds(10.0);    // Start time for the simulation
-Time stopTime = Seconds(20.0);    // Stop time for the simulation
+Time stopTime = Seconds(60.0);    // Stop time for the simulation
 
 // Function to install BulkSend application
 void
@@ -423,7 +423,7 @@ p2p.EnablePcapAll("point-to-point", true);
 
 1. 使用 `PointToPointHelper` 的 `EnablePcap` 方法，对 `T0` 路由器的三个网络设备启用 PCAP 捕获，并且指定将输出的 `*.pcap` 文件放在 `lv1_results/pcap/` 目录下，并且使文件名的前缀为 "lv1"。需要使用 promiscuous mode（混杂模式）。你可以仿照   `examples/tcp-linux-reno.cc` 的方法来创建输出文件所在的目录。
 
-修改完毕后，你可以在命令行中试着运行 `./ns3 run "dumbbell-base --flowSize0=1000 --flowSize1=2000"` 。如果一切正常，你应该得到如下的输出文件。（这里三个文件的命名方式是 `{prefix}-{#node}-{#device_of_node}`，其中 `prefix` 是你自己在 `EnablePcap` 中指定的，`#node` 是结点的全局编号（这里因为 `T0` 是首个被创建出的结点，所以其全局编号是 `0` ），`#device_of_node` 是对应的网络设备在结点上的编号（按照被创建的顺序编号，`T0T1` 链路上的设备编号是 `0` ，`S0T1` 链路上的设备编号是 `1` ，`S1T1` 链路上的设备编号是 `2` 。
+修改完毕后，你可以在命令行中试着运行 `./ns3 run "dumbbell-base --flowSize0=1000 --flowSize1=2000"` 。如果一切正常，你应该得到如下的输出文件。（这里三个文件的命名方式是 `{prefix}-{#node}-{#device_of_node}`，其中 `prefix` 是你自己在 `EnablePcap` 中指定的，`#node` 是结点的全局编号（这里因为 `T0` 是首个被创建出的结点，所以其全局编号是 `0` ），`#device_of_node` 是对应的网络设备在结点上的编号（按照被创建的顺序编号，`T0T1` 链路上的设备编号是 `0` ，`S0T0` 链路上的设备编号是 `1` ，`S1T0` 链路上的设备编号是 `2` 。
 
 ```bash
 student@327fb651b54a:~/workspace/ns-allinone-3.38/ns-3.38$ ls lv1-results/pcap/
@@ -708,7 +708,7 @@ student@327fb651b54a:~/workspace/ns-allinone-3.38/ns-3.38$ cat lv1-results/cwnd/
 
 本练习中，我们将趁热打铁，再做一个难度稍高一些的小练习：使用 ns-3 的 Tracing 机制，输出两条流的 FCT (Full Completion Time)。这一练习没有样例代码可以参考，你需要实现的代码量大约为 20-30 行。
 
-FCT 指的是一条流从开始发送到结束所经过的时间。具体而言，对于一条流，你可以用“这条流的最后一个 ACK 报文返回到发送方的时间”减去“这条流开始的时间”来得到其 FCT。
+FCT 指的是一条流从开始发送到结束所经过的时间。具体而言，对于一条流，你可以用“这条流的最后一个 ACK 报文返回到发送方的时间”减去“这条流开始的时间”来得到其 FCT。这里的“最后一个 ACK 报文”指的就是在四次挥手阶段从接收方返回发送方的 ACK 报文，如果你用 `tcpdump` 查看 Exercise 3 的输出文件的话，看到的最后一个发往流的发送方的报文就是这个报文。
 
 你的程序需要把测出的两条流的 FCT 输出到 `lv1-results/fct/fct.dat` 中，输出含两行，每行一个整数，第一行为 `flow_0` 的 FCT，第二行为 `flow_1` 的 FCT。
 
@@ -725,6 +725,7 @@ Ptr<BulkSendApplication> bulk_app = app.Get(0)->GetObject<BulkSendApplication>()
 2. 在我们的模拟场景中，你可以通过 `BulkSendApplication::GetSocket()` 得到发包应用所使用的 socket，其返回值是 `TcpSocketBase` 类型的。虽然 ns-3 中并没有哪个现存的 TraceSource 是直接用于在 socket 关闭时输出信息的，但是你可以巧妙地使用 `TcpSocketBase` 的 `Rx` 这一 TraceSource 来达成测量 FCT 的目的。你可以在 `src/tcp-socket-base.{h,cc}` 中找到 `TcpSocketBase` 的具体实现
 3. 别忘了，就像 Exercise 4 中一样，创建 Tracing 连接需要在应用开始之后进行，否则 ns-3 可能会访问到一个不存在的 socket
 4. ns-3 中的 `Time` 类型可以直接进行加减运算，并且对于 `Time` 类型的对象你可以使用  `GetMicroSeconds()` 方法来获得这一时间以微秒为单位的表示，返回值的类型为 `int64_t`。例如， `Simulator::Now().GetMicroSeconds()` 就会返回以微秒为单位的当前模拟器时间
+5. 新增提示：获取流的发送方的 socket 接收到最后一个报文的时间戳其实非常非常简单。其实助教设想的使用 `Rx` 这一 TraceSource 的做法中，根本没用到最后一个报文的内容具体是什么
 
 如果一切顺利，你运行修改后的 `dumbbell.cc` 应该可以获得如下的输出：
 
@@ -826,7 +827,9 @@ test/test-utils/run_test.sh <ns3_path> <test_name>
 * `ns3_path` 表示 `ns-3.38` 目录在你的机器上的**绝对路径（不是相对路径）**
 * `test_name` 表示你要进行的测试类型，支持的值有 fct、pcap、cwnd、all
 
-举例而言，`test/test-utils/run_test.sh /home/student/workspace/ns-allinone-3.38 cwnd` 可用于单独测试 Exercise 4 (cwnd)，`test/test-utils/run_test.sh /home/student/workspace/ns-allinone-3.38 all` 可用于测试所有需要测试的三个 Exercise (pcap, cwnd, fct) 。具体的用法描述可以参见 `README.md` 和 `test/test-utils/README.md` 。
+举例而言，`test/test-utils/run_test.sh /home/student/workspace/ns-allinone-3.38/ns-3.38 cwnd` 可用于单独测试 Exercise 4 (cwnd)，`test/test-utils/run_test.sh /home/student/workspace/ns-allinone-3.38/ns-3.38 all` 可用于测试所有需要测试的三个 Exercise (pcap, cwnd, fct) 。具体的用法描述可以参见 `README.md` 和 `test/test-utils/README.md` 。
+
+【补注：在 starter code 仓库的 `README.md` 和 `test/test-utils/README.md` 中，在举例介绍评测脚本运行方式的时候，把运行参数中的 `ns3_path` 打错了。请同学们以本文档的例子为准，运行脚本的第一个参数务必要写的是 `ns-3.38` 这一目录的绝对路径。】
 
 #### 评测脚本的逻辑
 
