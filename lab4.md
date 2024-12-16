@@ -423,7 +423,7 @@ p2p.EnablePcapAll("point-to-point", true);
 
 1. 使用 `PointToPointHelper` 的 `EnablePcap` 方法，对 `T0` 路由器的三个网络设备启用 PCAP 捕获，并且指定将输出的 `*.pcap` 文件放在 `lv1_results/pcap/` 目录下，并且使文件名的前缀为 "lv1"。需要使用 promiscuous mode（混杂模式）。你可以仿照   `examples/tcp-linux-reno.cc` 的方法来创建输出文件所在的目录。
 
-修改完毕后，你可以在命令行中试着运行 `./ns3 run "dumbbell-base --flowSize0=1000 --flowSize1=2000"` 。如果一切正常，你应该得到如下的输出文件。（这里三个文件的命名方式是 `{prefix}-{#node}-{#device_of_node}`，其中 `prefix` 是你自己在 `EnablePcap` 中指定的，`#node` 是结点的全局编号（这里因为 `T0` 是首个被创建出的结点，所以其全局编号是 `0` ），`#device_of_node` 是对应的网络设备在结点上的编号（按照被创建的顺序编号，`T0T1` 链路上的设备编号是 `0` ，`S0T0` 链路上的设备编号是 `1` ，`S1T0` 链路上的设备编号是 `2` 。
+修改完毕后，你可以在命令行中试着运行 `./ns3 run "dumbbell --flowSize0=1000 --flowSize1=2000"` 。如果一切正常，你应该得到如下的输出文件。（这里三个文件的命名方式是 `{prefix}-{#node}-{#device_of_node}`，其中 `prefix` 是你自己在 `EnablePcap` 中指定的，`#node` 是结点的全局编号（这里因为 `T0` 是首个被创建出的结点，所以其全局编号是 `0` ），`#device_of_node` 是对应的网络设备在结点上的编号（按照被创建的顺序编号，`T0T1` 链路上的设备编号是 `0` ，`S0T0` 链路上的设备编号是 `1` ，`S1T0` 链路上的设备编号是 `2` 。
 
 ```bash
 student@327fb651b54a:~/workspace/ns-allinone-3.38/ns-3.38$ ls lv1-results/pcap/
@@ -722,7 +722,7 @@ ApplicationContainer app = bulk_helper.Install(node);
 Ptr<BulkSendApplication> bulk_app = app.Get(0)->GetObject<BulkSendApplication>()
 ```
 
-2. 在我们的模拟场景中，你可以通过 `BulkSendApplication::GetSocket()` 得到发包应用所使用的 socket，其返回值是 `TcpSocketBase` 类型的。虽然 ns-3 中并没有哪个现存的 TraceSource 是直接用于在 socket 关闭时输出信息的，但是你可以巧妙地使用 `TcpSocketBase` 的 `Rx` 这一 TraceSource 来达成测量 FCT 的目的。你可以在 `src/tcp-socket-base.{h,cc}` 中找到 `TcpSocketBase` 的具体实现
+2. 在我们的模拟场景中，你可以通过 `BulkSendApplication::GetSocket()` 得到发包应用所使用的 socket，其返回值是 `TcpSocketBase` 类型的。虽然 ns-3 中并没有哪个现存的 TraceSource 是直接用于在 socket 关闭时输出信息的，但是你可以巧妙地使用 `TcpSocketBase` 的 `Rx` 这一 TraceSource 来达成测量 FCT 的目的。你可以在 `src/internet/model/tcp-socket-base.{h,cc}` 中找到 `TcpSocketBase` 的具体实现
 3. 别忘了，就像 Exercise 4 中一样，创建 Tracing 连接需要在应用开始之后进行，否则 ns-3 可能会访问到一个不存在的 socket
 4. ns-3 中的 `Time` 类型可以直接进行加减运算，并且对于 `Time` 类型的对象你可以使用  `GetMicroSeconds()` 方法来获得这一时间以微秒为单位的表示，返回值的类型为 `int64_t`。例如， `Simulator::Now().GetMicroSeconds()` 就会返回以微秒为单位的当前模拟器时间
 5. 新增提示：获取流的发送方的 socket 接收到最后一个报文的时间戳其实非常非常简单。其实助教设想的使用 `Rx` 这一 TraceSource 的做法中，根本没用到最后一个报文的内容具体是什么
