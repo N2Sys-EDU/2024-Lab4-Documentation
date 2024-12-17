@@ -376,14 +376,14 @@ cmd.AddValue("MyVar", "Description of this argument", MyVar);
 cmd.Parse (argc, argv);
 ```
 
-本练习中，我们需要让 `dumbbell-base.cc` 能够接受两个命令行参数，分别代表两条流 `flow 0` 和 `flow 1` 的大小（单位为 Byte）。你需要对代码做以下的修改：
+本练习中，我们需要让 `dumbbell.cc` 能够接受两个命令行参数，分别代表两条流 `flow 0` 和 `flow 1` 的大小（单位为 Byte）。你需要对代码做以下的修改：
 
 1. 接受两个命令行参数 `flowSize0` 和 `flowSize1` ，分别代表 `flow 0` 和 `flow 1` 的大小。你可以用 `uint32_t` 来存放这两个大小值。
 2. 修改 `InstallBulkSend()` 函数的参数列表和实现，使其可以多接受一个参数 `uint32_t flowSize`，并使用 `source.SetAttribute("MaxBytes",UintegerValue(flowSize));` 来通过限制发包应用的最大发送字节数来指定流的大小。当然，你也会需要修改调用 `InstallBulkSend()` 函数的地方，把从命令行接收到的流大小参数传进去。
 
 > 来自助教的问候：你可能会觉得这个 Exercise 有点太简单了，这对吗？这对的！因为修改 ns-3 的代码确实就不难
 
-修改完毕后，你就可以在命令行中试着运行 `./ns3 run "dumbbell-base --flowSize0=4000 --flowSize1=5000"` 。如果程序顺利地编译运行，没有显示任何报错，那么大概率你的实现就是正确的。你依然找不到任何实验结果的输出，这是符合预期的，所以你确实没有办法知道你的代码是否完全正确。不过很快你就能在 Exercise 3 中检验你在 Exercise 2 中的实现是否正确了。
+修改完毕后，你就可以在命令行中试着运行 `./ns3 run "dumbbell --flowSize0=4000 --flowSize1=5000"` 。如果程序顺利地编译运行，没有显示任何报错，那么大概率你的实现就是正确的。你依然找不到任何实验结果的输出，这是符合预期的，所以你确实没有办法知道你的代码是否完全正确。不过很快你就能在 Exercise 3 中检验你在 Exercise 2 中的实现是否正确了。
 
 ### Exercise 3 获取 PCAP Trace
 
