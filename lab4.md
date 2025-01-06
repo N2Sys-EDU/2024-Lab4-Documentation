@@ -421,7 +421,7 @@ p2p.EnablePcapAll("point-to-point", true);
 
 本练习中，我们需要让 `dumbbell.cc` 能够输出【 `T0` 路由器上的所有网络设备（一共三个）的 PCAP Trace】。你需要对代码做以下的修改：
 
-1. 使用 `PointToPointHelper` 的 `EnablePcap` 方法，对 `T0` 路由器的三个网络设备启用 PCAP 捕获，并且指定将输出的 `*.pcap` 文件放在 `lv1_results/pcap/` 目录下，并且使文件名的前缀为 "lv1"。需要使用 promiscuous mode（混杂模式）。你可以仿照   `examples/tcp-linux-reno.cc` 的方法来创建输出文件所在的目录。
+1. 使用 `PointToPointHelper` 的 `EnablePcap` 方法，对 `T0` 路由器的三个网络设备启用 PCAP 捕获，并且指定将输出的 `*.pcap` 文件放在 `lv1-results/pcap/` 目录下，并且使文件名的前缀为 "lv1"。需要使用 promiscuous mode（混杂模式）。你可以仿照   `examples/tcp-linux-reno.cc` 的方法来创建输出文件所在的目录。
 
 修改完毕后，你可以在命令行中试着运行 `./ns3 run "dumbbell --flowSize0=1000 --flowSize1=2000"` 。如果一切正常，你应该得到如下的输出文件。（这里三个文件的命名方式是 `{prefix}-{#node}-{#device_of_node}`，其中 `prefix` 是你自己在 `EnablePcap` 中指定的，`#node` 是结点的全局编号（这里因为 `T0` 是首个被创建出的结点，所以其全局编号是 `0` ），`#device_of_node` 是对应的网络设备在结点上的编号（按照被创建的顺序编号，`T0T1` 链路上的设备编号是 `0` ，`S0T0` 链路上的设备编号是 `1` ，`S1T0` 链路上的设备编号是 `2` 。
 
